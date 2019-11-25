@@ -1,0 +1,19 @@
+#titre {
+  	color: #FF9800;
+  font-size: 45px;
+}
+
+body {
+  background-color: #333;
+  font-family: 'Luckiest Guy', cursive;
+  text-align: center;
+}
+
+#map {
+	width: 500px;
+	height: 500px;
+}
+
+#conteneur {
+	border: 1px solid black;
+}
