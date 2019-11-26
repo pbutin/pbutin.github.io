@@ -1,19 +1,26 @@
 #titre {
-  	color: #FF9800;
-  font-size: 45px;
+  color: #FF9800;
+  font-size: 60px;
+  text-align: center;
+  font-family: 'Courgette', cursive;
 }
 
 body {
   background-color: #333;
   font-family: 'Luckiest Guy', cursive;
-  text-align: center;
 }
 
 #map {
-	width: 500px;
-	height: 500px;
+	width: 80%;
+	height: 600px;
+	margin-left: 10%;
+}
+
+#bottomImage{
+    position:fixed;
+    bottom:0px;
+    left:55%;
 }
 
 #conteneur {
-	border: 1px solid black;
 }

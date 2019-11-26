@@ -1,8 +1,8 @@
 // Latitude du centre de la carte
-var mapCenterLat = 46.2938
+var mapCenterLat = 39.46867
 
 // Longitude du centre de la carte
-var mapCenterLong = 2.3610;
+var mapCenterLong = -11.59133;
 
 // niveau du zoom sur la carte
 var zoom = 5;
@@ -14,7 +14,8 @@ var addrAPI = "https://api-adresse.data.gouv.fr/search/"
 var data;
 
 // limite nombre d'elements de la requete
-var limitData = 99;
+var limitData = 1;
+
 
 
 window.onload = function init() { 
@@ -57,14 +58,22 @@ function initMap() {
 
 	center = {lat: mapCenterLat, lng: mapCenterLong}
 	// creer la carte avec comme point central center
-	map = new google.maps.Map(
-		document.getElementById('map'), {zoom: zoom, center: center});
+	map = new google.maps.Map(document.getElementById('map'), {
+		zoom: zoom,
+		center: center,
+		styles: mapStyle
+	});
 
 
 	// pour chaque adresses, creer un marqueur sur la carte
 	data.features.forEach(function(elt) {
-		point = {lat:   elt.geometry.coordinates[1]  , lng:   elt.geometry.coordinates[0]  };
-		marker = new google.maps.Marker({position: point, map: map});
+		//point = {lat:   elt.geometry.coordinates[1]  , lng:   elt.geometry.coordinates[0]  };
+        point = {lat: 39.46867, lng: -11.59133};
+		marker = new google.maps.Marker({
+			position: point,
+			map: map,
+			icon: 'img/bateau.gif'
+		});
 	});
 }
 
@@ -81,18 +90,4 @@ function readDataFromBrowsersStorage() {
 	if (typeof(localStorage) !== "undefined") {
 		console.log(localStorage.data);
 	}
-}
-
-// test du programme
-// effectue une recherche "f", actualise la carte et affiche la variable data du stockage navigateur
-// effectue une recherche "fffffffff", actualise la carte et affiche la variable data du stockage navigateur
-// effectue une recherche ""
-function test() {
-	getData("f");
-	setTimeout(readDataFromBrowsersStorage, 500);
-
-	setTimeout(getData, 5000, "fffffffff");
-	setTimeout(readDataFromBrowsersStorage, 5500);
-
-	setTimeout(getData, 10000, "");
 }
