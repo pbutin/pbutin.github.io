@@ -1,8 +1,8 @@
 // Latitude du centre de la carte
-var mapCenterLat = 39.46867
+var mapCenterLat = 38.688;
 
 // Longitude du centre de la carte
-var mapCenterLong = -11.59133;
+var mapCenterLong = -9.406667;
 
 // niveau du zoom sur la carte
 var zoom = 5;
@@ -68,13 +68,39 @@ function initMap() {
 	// pour chaque adresses, creer un marqueur sur la carte
 	data.features.forEach(function(elt) {
 		//point = {lat:   elt.geometry.coordinates[1]  , lng:   elt.geometry.coordinates[0]  };
-        point = {lat: 39.46867, lng: -11.59133};
+        point = {lat: 38.688, lng: -9.406667};
 		marker = new google.maps.Marker({
 			position: point,
 			map: map,
 			icon: 'img/bateau.gif'
 		});
 	});
+
+	var flightPlanCoordinates = [
+      	{lat: 38.703744, lng: -9.421158},
+		{lat: 33.056064, lng: -16.333745},
+		{lat: 28.471083, lng: -16.250288},
+		{lat: 28.122381, lng: -15.414525},
+		{lat: 28.078602, lng: -17.327841},
+		{lat: 28.086146, lng: -17.108436},
+		{lat: 28.675991, lng: -17.765971},
+		{lat: 28.288232, lng: -16.862890},
+		{lat: 28.471083, lng: -16.250288},
+		{lat: 33.056064, lng: -16.333745},
+		{lat: 32.644413, lng: -16.899954},
+		{lat: 36.553139, lng: -6.234574},
+		{lat: 38.679266, lng: 1.518799},
+		{lat: 43.274040, lng: 3.507803}
+    ];
+    var flightPath = new google.maps.Polyline({
+      path: flightPlanCoordinates,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    flightPath.setMap(map);
 }
 
 

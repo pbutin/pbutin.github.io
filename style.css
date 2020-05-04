@@ -14,13 +14,11 @@ body {
 	width: 80%;
 	height: 600px;
 	margin-left: 10%;
+	margin-top: 50px;
 }
 
 #bottomImage{
     position:fixed;
     bottom:0px;
     left:55%;
-}
-
-#conteneur {
 }
