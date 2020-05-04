@@ -77,7 +77,7 @@ function initMap() {
 	});
 
 	var flightPlanCoordinates = [
-      	{lat: 38.703744, lng: -9.421158},
+		{lat: 38.703744, lng: -9.421158},
 		{lat: 33.056064, lng: -16.333745},
 		{lat: 28.471083, lng: -16.250288},
 		{lat: 28.122381, lng: -15.414525},
@@ -89,9 +89,15 @@ function initMap() {
 		{lat: 33.056064, lng: -16.333745},
 		{lat: 32.644413, lng: -16.899954},
 		{lat: 36.553139, lng: -6.234574},
+		{lat: 35.976253, lng: -6.131565},
+		{lat: 35.931786, lng: -5.653638},
+		{lat: 36.304526, lng: -1.654593},
+		{lat: 37.751630, lng: 0.696503},
 		{lat: 38.679266, lng: 1.518799},
+		{lat: 40.652327, lng: 2.458654},
+		{lat: 41.972582, lng: 3.584731},
 		{lat: 43.274040, lng: 3.507803}
-    ];
+		];
     var flightPath = new google.maps.Polyline({
       path: flightPlanCoordinates,
       geodesic: true,
