@@ -59,12 +59,23 @@ window.onload = function initMap() {
 		{lat: 41.972582, lng: 3.584731},
 		{lat: 43.274040, lng: 3.507803}
 		];
+
+		var lineSymbol = {
+          path: 'M 0,-1 0,1',
+          strokeOpacity: 1,
+          scale: 3
+        };
     var flightPath = new google.maps.Polyline({
       path: flightPlanCoordinates,
       geodesic: true,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1.0,
-      strokeWeight: 2
+      strokeColor: '#bf3c1b',
+      strokeOpacity: 0,
+      strokeWeight: 2,
+       icons: [{
+            icon: lineSymbol,
+            offset: '0',
+            repeat: '20px'
+          }],
     });
 
     flightPath.setMap(map);
