@@ -11,6 +11,7 @@ var initLat;
 var initLng;
 var point;
 var marker;
+var flightPlanCoordinates;
 // initialise et affiche la carte
 window.onload = function initMap() {
 	var center;
@@ -36,7 +37,7 @@ window.onload = function initMap() {
 		icon: 'img/bateau.gif'
 	});
 
-	var flightPlanCoordinates = [
+	flightPlanCoordinates = [
 		{lat: 38.703744, lng: -9.421158},
 		{lat: 33.056064, lng: -16.333745},
 		{lat: 28.471083, lng: -16.250288},
@@ -68,14 +69,14 @@ window.onload = function initMap() {
 
     flightPath.setMap(map);
 
-    startAnimation(flightPlanCoordinates);
+    startAnimation();
 }
 
 
 var j = 1;
 var distanceTot = 0
-function startAnimation(points) {
-
+function startAnimation() {
+		var points = flightPlanCoordinates;
 	  	var distance = Math.sqrt(Math.pow((points[j-1].lat - points[j].lat), 2) + Math.pow((points[j-1].lng - points[j].lng), 2));
 	  	var nbIncrementation = distance * 100;
 	  	distanceTot += distance;
@@ -97,16 +98,25 @@ function startAnimation(points) {
 
 		          		if (i  >= nbIncrementation -1 && j < points.length -1) {
 		          			j++;
-		          			startAnimation(points);
+		          			startAnimation();
 		          		}
-		          		/*if (j == points.length -1) { INIT
-		          			j = 1;
-		          			latlng = new google.maps.LatLng(initLat, initLng);
-		          			marker.setPosition(latlng);
-		          			//startAnimation(points);
-		          		}*/
-		        	}, ((distanceTot * 100 - (nbIncrementation - i )) * 3)
+		        	}, ((distanceTot * 100 - (nbIncrementation - i )) * 1) //3
 		      	);
 		    })(i)
 	  	}
+}
+
+
+function keyPressed(e){
+
+	var key = event.keyCode;
+	switch (key) {
+  		case 82:
+		distanceTot = 0;
+		j = 1;
+		latlng = new google.maps.LatLng(initLat, initLng);
+		marker.setPosition(latlng);
+		startAnimation();
+	    break;
+	}
 }
