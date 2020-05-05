@@ -1,5 +1,5 @@
 // Latitude du centre de la carte
-var mapCenterLat = 38.688;
+var mapCenterLat = 36;
 
 // Longitude du centre de la carte
 var mapCenterLong = -9.406667;
@@ -7,57 +7,18 @@ var mapCenterLong = -9.406667;
 // niveau du zoom sur la carte
 var zoom = 5;
 
-// adresse de l'API + point d'entre
-var addrAPI = "https://api-adresse.data.gouv.fr/search/"
-
-// objet JSON elements de la requete
-var data;
-
-// limite nombre d'elements de la requete
-var limitData = 1;
-
-
-
-window.onload = function init() { 
-   getData("paris");
-} 
-
-// fait une requete sur addrAPI si str n'est pas vide
-// avec pour champ de recherche str
-// execute storeDataInBrowsersStorage() et initMap() apres la reponse du serveur
-function getData(str) {
-	if (str != "") {
-		var req = new XMLHttpRequest();
-		var param = "";
-
-		req.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) { //reponse recu et valide
-				data = JSON.parse(this.responseText);
-				storeDataInBrowsersStorage();
-				initMap();
-			}
-		};
-
-		param = param.concat('?', "q=", str);
-		param = param.concat('&', "limit=", limitData);
-
-		req.open("GET", addrAPI + param, async = true);
-
-		req.send(null);
-	}
-}
-
-
+var initLat;
+var initLng;
+var point;
+var marker;
 // initialise et affiche la carte
-// avec les adresses present dans la variable data
-function initMap() {
+window.onload = function initMap() {
 	var center;
-	var point;
-	var marker;
+	
 	var map;
 
 	center = {lat: mapCenterLat, lng: mapCenterLong}
-	// creer la carte avec comme point central center
+
 	map = new google.maps.Map(document.getElementById('map'), {
 		zoom: zoom,
 		center: center,
@@ -65,15 +26,14 @@ function initMap() {
 	});
 
 
-	// pour chaque adresses, creer un marqueur sur la carte
-	data.features.forEach(function(elt) {
-		//point = {lat:   elt.geometry.coordinates[1]  , lng:   elt.geometry.coordinates[0]  };
-        point = {lat: 38.688, lng: -9.406667};
-		marker = new google.maps.Marker({
-			position: point,
-			map: map,
-			icon: 'img/bateau.gif'
-		});
+	initLat = 37.703744;
+	initLng = -9.421158;
+
+    point = {lat: initLat, lng: initLng};
+	marker = new google.maps.Marker({
+		position: point,
+		map: map,
+		icon: 'img/bateau.gif'
 	});
 
 	var flightPlanCoordinates = [
@@ -107,19 +67,46 @@ function initMap() {
     });
 
     flightPath.setMap(map);
+
+    startAnimation(flightPlanCoordinates);
 }
 
 
-// convertie data en String et l'enregistre dans le navigateur
-function storeDataInBrowsersStorage() {
-	if (typeof(localStorage) !== "undefined") { // si pas de stockage possible
-		localStorage.setItem("data", JSON.stringify(data));
-	}
-}
+var j = 1;
+var distanceTot = 0
+function startAnimation(points) {
 
-// affiche la variable data du stockage navigateur dans la console
-function readDataFromBrowsersStorage() {
-	if (typeof(localStorage) !== "undefined") {
-		console.log(localStorage.data);
-	}
+	  	var distance = Math.sqrt(Math.pow((points[j-1].lat - points[j].lat), 2) + Math.pow((points[j-1].lng - points[j].lng), 2));
+	  	var nbIncrementation = distance * 100;
+	  	distanceTot += distance;
+
+	 	var deltalat = (points[j].lat - points[j-1].lat) / nbIncrementation;
+	  	var deltalng = (points[j].lng - points[j-1].lng) / nbIncrementation;
+
+	  	for (var i = 0; i < nbIncrementation; i++) {
+		    (function(ind) {
+		      	setTimeout(
+		        	function() {
+		          		var lat = marker.position.lat();
+		          		var lng = marker.position.lng();
+
+		          		lat += deltalat;
+		          		lng += deltalng;
+		          		latlng = new google.maps.LatLng(lat, lng);
+		          		marker.setPosition(latlng);
+
+		          		if (i  >= nbIncrementation -1 && j < points.length -1) {
+		          			j++;
+		          			startAnimation(points);
+		          		}
+		          		/*if (j == points.length -1) { INIT
+		          			j = 1;
+		          			latlng = new google.maps.LatLng(initLat, initLng);
+		          			marker.setPosition(latlng);
+		          			//startAnimation(points);
+		          		}*/
+		        	}, ((distanceTot * 100 - (nbIncrementation - i )) * 3)
+		      	);
+		    })(i)
+	  	}
 }
