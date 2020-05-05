@@ -8,15 +8,20 @@ var mapCenterLong = -9.406667;
 var zoom = 5;
 
 var initLat;
+	var map;
 var initLng;
 var point;
 var marker;
 var flightPlanCoordinates;
+var lineSymbol = {
+          path: 'M 0,-1 0,1',
+          strokeOpacity: 1,
+          scale: 3
+        };
 // initialise et affiche la carte
 window.onload = function initMap() {
 	var center;
 	
-	var map;
 
 	center = {lat: mapCenterLat, lng: mapCenterLong}
 
@@ -27,17 +32,32 @@ window.onload = function initMap() {
 	});
 
 
-	initLat = 37.703744;
+	initLat = 38.703744;
 	initLng = -9.421158;
+
+	var markerImage = new google.maps.MarkerImage('img/bateau.gif',
+        new google.maps.Size(100, 100),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(50, 80));
 
     point = {lat: initLat, lng: initLng};
 	marker = new google.maps.Marker({
 		position: point,
 		map: map,
-		icon: 'img/bateau.gif'
+		icon: markerImage,
 	});
 
-	flightPlanCoordinates = [
+
+
+    startAnimation();
+}
+
+
+var j = 1;
+var distanceTot = 0
+var points;
+var routes = [];
+flightPlanCoordinates = [
 		{lat: 38.703744, lng: -9.421158},
 		{lat: 33.056064, lng: -16.333745},
 		{lat: 28.471083, lng: -16.250288},
@@ -59,61 +79,68 @@ window.onload = function initMap() {
 		{lat: 41.972582, lng: 3.584731},
 		{lat: 43.274040, lng: 3.507803}
 		];
+points = flightPlanCoordinates;
+routes = [{lat: points[0].lat, lng: points[0].lng}, {lat: points[0].lat, lng: points[0].lng}];
 
-		var lineSymbol = {
-          path: 'M 0,-1 0,1',
-          strokeOpacity: 1,
-          scale: 3
-        };
-    var flightPath = new google.maps.Polyline({
-      path: flightPlanCoordinates,
-      geodesic: true,
-      strokeColor: '#bf3c1b',
-      strokeOpacity: 0,
-      strokeWeight: 2,
-       icons: [{
-            icon: lineSymbol,
-            offset: '0',
-            repeat: '20px'
-          }],
-    });
+var save;
 
-    flightPath.setMap(map);
-
-    startAnimation();
-}
-
-
-var j = 1;
-var distanceTot = 0
 function startAnimation() {
-		var points = flightPlanCoordinates;
+
+save = new google.maps.Polyline();
 	  	var distance = Math.sqrt(Math.pow((points[j-1].lat - points[j].lat), 2) + Math.pow((points[j-1].lng - points[j].lng), 2));
-	  	var nbIncrementation = distance * 100;
+	  	var nbIncrementation = distance * 100;//100
 	  	distanceTot += distance;
 
 	 	var deltalat = (points[j].lat - points[j-1].lat) / nbIncrementation;
 	  	var deltalng = (points[j].lng - points[j-1].lng) / nbIncrementation;
 
+	  	if (j == 1) {
+  			setTimeout(function(){
+  				routes.pop();
+  				routes.push(flightPlanCoordinates[1]);
+  				routes.push(flightPlanCoordinates[1]);
+  			}, ((distanceTot * 100 ) * 3));
+	  	}
+
 	  	for (var i = 0; i < nbIncrementation; i++) {
-		    (function(ind) {
-		      	setTimeout(
-		        	function() {
-		          		var lat = marker.position.lat();
-		          		var lng = marker.position.lng();
+	      	setTimeout(
+	        	function() {
+	          		var lat = marker.position.lat();
+	          		var lng = marker.position.lng();
 
-		          		lat += deltalat;
-		          		lng += deltalng;
-		          		latlng = new google.maps.LatLng(lat, lng);
-		          		marker.setPosition(latlng);
+	          		lat += deltalat;
+	          		lng += deltalng;
+	          		latlng = new google.maps.LatLng(lat, lng);
+	          		marker.setPosition(latlng);
 
-		          		if (i  >= nbIncrementation -1 && j < points.length -1) {
-		          			j++;
-		          			startAnimation();
-		          		}
-		        	}, ((distanceTot * 100 - (nbIncrementation - i )) * 1) //3
-		      	);
-		    })(i)
+	          		routes.pop();
+					routes.push({lat: lat, lng: lng});
+
+					var flightPath = new google.maps.Polyline({
+					  path: routes,
+					  geodesic: true,
+					  strokeColor: '#bf3c1b',
+					  strokeOpacity: 0,
+					  strokeWeight: 2,
+					   icons: [{
+					        icon: lineSymbol,
+					        offset: '0',
+					        repeat: '20px'
+					      }],
+					});
+					save.setMap(null);
+					flightPath.setMap(map);
+					save = flightPath;
+
+	          		if (i  >= nbIncrementation -1 && j < points.length -1) {
+	          			j++;
+	          			startAnimation();
+	          			setTimeout(function(){
+	          				routes.push(flightPlanCoordinates[j]);
+	          			}, ((distanceTot * 100 - (nbIncrementation - i )) * 3));
+	          		}
+	        	}, ((distanceTot * 100 - (nbIncrementation - i )) * 3) //3
+	      	);
 	  	}
 }
 
@@ -123,6 +150,8 @@ function keyPressed(e){
 	var key = event.keyCode;
 	switch (key) {
   		case 82:
+  		save.setMap(null);
+		routes = [{lat: points[0].lat, lng: points[0].lng}, {lat: points[0].lat, lng: points[0].lng}];
 		distanceTot = 0;
 		j = 1;
 		latlng = new google.maps.LatLng(initLat, initLng);
