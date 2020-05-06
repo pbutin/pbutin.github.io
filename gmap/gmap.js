@@ -64,7 +64,7 @@ var distanceTot = 0
 var points;
 var routes = [];
 var firstPoint = true;
-points = [{
+points = [
 	{coords: {lat: 38.703744, lng: -9.421158}, stop:false},
 	{coords: {lat: 33.056064, lng: -16.333745}, stop:true},
 	{coords: {lat: 28.471083, lng: -16.250288}, stop:false},
