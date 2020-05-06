@@ -152,21 +152,29 @@ function keyPressed(e){
 	var key = event.keyCode;
 	switch (key) {
   		case 82:
-	  		save.setMap(null);
+	  		restart();
+		    break;
+
+		case 78:
+		nextStep();
+		    break;
+	}
+}
+
+function nextStep(){
+			distanceTot = 0;
+			j++;
+			firstPoint = true;
+			routes.push(points[j].coords);
+			startAnimation();
+			}
+
+function restart() {
+	save.setMap(null);
 			routes = [{lat: points[0].coords.lat, lng: points[0].coords.lng}, {lat: points[0].coords.lat, lng: points[0].coords.lng}];
 			distanceTot = 0;
 			j = 1;
 			latlng = new google.maps.LatLng(initLat, initLng);
 			marker.setPosition(latlng);
 			startAnimation();
-		    break;
-
-		case 78:
-			distanceTot = 0;
-			j++;
-			firstPoint = true;
-			routes.push(points[j].coords);
-			startAnimation();
-		    break;
-	}
 }
