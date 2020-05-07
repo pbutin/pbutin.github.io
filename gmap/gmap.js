@@ -74,7 +74,9 @@ window.onload = function initMap() {
 
     // route dynamique
     // save = new google.maps.Polyline();
-    startAnimation();
+    if (points[0].stop == false) {
+    	startAnimation();
+    }
 }
 
 
@@ -84,7 +86,8 @@ var points;
 var routes = [];
 var firstPoint = true;
 points = [
-	{coords: {lat: 38.703744, lng: -9.421158}, stop:true},
+{coords: {lat: 38.703744, lng: -9.421158}, stop:true},
+{coords: {lat: 38.703744, lng: -9.421158}, stop:true},
 {coords: {lat: 33.056064, lng: -16.333745}, stop:true},
 {coords: {lat: 28.471083, lng: -16.250288}, stop:true},
 {coords: {lat: 28.122381, lng: -15.414525}, stop:false},
